@@ -1,0 +1,17 @@
+{ 
+  "compilerOptions": { 
+    "target": "ES2022", 
+    "lib": ["ES2023", "DOM"], 
+    "module": "ESNext", 
+    "moduleResolution": "Bundler", 
+    "types": ["node", "jest"], 
+    "strict": true, 
+    "noUncheckedIndexedAccess": true, 
+    "skipLibCheck": true, 
+    "esModuleInterop": true, 
+    "forceConsistentCasingInFileNames": true, 
+    "outDir": "dist", 
+    "sourceMap": true 
+  }, 
+   "include": ["src", "tests"]
+}

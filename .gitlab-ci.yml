@@ -1,0 +1,38 @@
+stages:
+  - build
+  - deploy
+
+build_job:
+  stage: build
+  tags: [build-runner]
+  only: [main]
+  script:
+    - |
+      set -e
+      echo "👮‍♂️ Авторизация в GitLab Registry"
+      echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+
+      IMAGE="$CI_REGISTRY_IMAGE:latest"   # <registry>/<group>/<project>:latest
+      echo "📦 Сборка Docker образа: $IMAGE"
+      docker build -t "$IMAGE" .
+
+      echo "🚚 Пуш образа"
+      echo "IMAGE=$CI_REGISTRY_IMAGE:latest"
+      docker push "$IMAGE"
+
+deploy_job:
+  stage: deploy
+  tags: [build-runner]
+  only: [main]
+  script:
+    - |
+      set -e
+      echo "👮‍♂️ Авторизация в GitLab Registry"
+      echo "$CI_REGISTRY_READ_TOKEN" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+
+      IMAGE="$CI_REGISTRY_IMAGE:latest"
+      echo "🔎 Проверяю доступ к $IMAGE"
+      docker pull "$IMAGE"
+
+      echo "🚀 Деплой приложения"
+      docker compose up -d --remove-orphans --force-recreate
