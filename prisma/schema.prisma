@@ -11,7 +11,7 @@ model Category {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   color     String?  @default("#3b82f6")
-  createdAt DateTime @default(now())
+  createdAt DateTime @default(now()) 
   updatedAt DateTime @updatedAt
   todos     Todo[]
 
